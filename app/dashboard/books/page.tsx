@@ -82,7 +82,7 @@ export default function BooksPage() {
     }
     const response: Book | null = await saveBookHelper(newBook, { setLoading: setLoading });
     if (response !== null) {
-      setBooks((list) => (list ? [...list, response] : [response]));
+      getBooks(currentPage, searchText);
     }
 
     setDialogOpen(false)
@@ -95,11 +95,7 @@ export default function BooksPage() {
     if (!book.id) return;
     const response: Book | null = await updateBookHelper(book.id, newBook, { setLoading: setLoading });
     if (response !== null) {
-      console.log(response)
-      setBooks((list) => {
-        if (!list) return [response];
-        return list.map((b) => (b.id === response.id ? response : b));
-      });
+      getBooks(currentPage, searchText);
     }
 
     setEditingBook(null)
@@ -142,7 +138,7 @@ export default function BooksPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Kitap Yönetimi</h1>
-          <p className="text-muted-foreground mt-2">Toplam
+          <p className="text-muted-foreground mt-2 ">Toplam
             <b className="font-bold"> {bookPageResponse?.totalElements || 0}</b> kitap envanterde</p>
         </div>
         <div className="flex gap-2">
@@ -166,7 +162,7 @@ export default function BooksPage() {
         onSubmit={editingBook ? handleUpdateBook : handleAddBook}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
 
         {/* Search Bar */}
         <input
@@ -175,7 +171,7 @@ export default function BooksPage() {
           onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="Kitap adı veya barkod ile ara"
-          className="flex-1 p-2 border border-border rounded-lg bg-white text-foreground"
+          className="flex-1 p-2 border border-border rounded-lg bg-white text-foreground "
         />
         <Button size="lg" className="gap-2" onClick={handleSearch}>
           <Search className="w-4 h-4" />
