@@ -7,14 +7,14 @@ import { BookOpen, Package, Layers, TrendingUp } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { getBookTotalCountHelper, getTotalPriceHelper } from '@/lib/service/helper/books-helper'
 import { Category } from '@/lib/slices/categoriesSlice'
-import { getCategoriesByTypeHelper, getCategoriesHelper } from '@/lib/service/helper/category-helper'
+import { getCategoriesHelper } from '@/lib/service/helper/category-helper'
 
 export default function DashboardPage() {
   const bookItems = useAppSelector((state) => state.books.items)
   const stationeryItems = useAppSelector((state) => state.stationery.items)
   const [categories, setCategories] = useState<Category[]>([])
   const [totalBooks, setTotalBooks] = useState<number>(0)
-  const totalStationery = useAppSelector((state) => state.stationery.total)
+  const [totalStationery, setTotalStationery] = useState<number>(0)
   const [totalPrice, setTotalPrice] = useState<number>(0)
 
   const [loading, setLoading] = useState(false)
@@ -99,7 +99,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentItemsCard
           title="Son Eklenen Kitaplar"
-          items={bookItems.slice(0, 5).map((book) => ({
+          items={bookItems.slice(0, 0).map((book) => ({
             id: book.id,
             name: book.title,
             category: book.category,
@@ -110,7 +110,7 @@ export default function DashboardPage() {
         />
         <RecentItemsCard
           title="Son Eklenen Kırtasiye"
-          items={stationeryItems.slice(0, 5).map((item) => ({
+          items={stationeryItems.slice(0, 0).map((item) => ({
             id: item.id,
             name: item.name,
             category: item.category,
