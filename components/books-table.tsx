@@ -42,7 +42,7 @@ export default function BooksTable({ books, onEdit, onDelete }: BooksTableProps)
                   <td className="px-6 py-4 text-sm text-foreground font-mono">{book.barcode}</td>
                   <td className="px-6 py-4 text-foreground">{book.publishingHouse}</td>
                   <td className="px-6 py-4">
-                    <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category.name}</span>
+                    <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category?.name}</span>
                   </td>
                   <td className="px-6 py-4 text-center font-medium text-foreground">{book.shelfNo}</td>
                   <td className="px-6 py-4 text-right font-medium text-foreground">{book.stockCount}</td>

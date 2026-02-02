@@ -64,7 +64,7 @@ export const saveBookHelper = async (bookData: BookSaveRequest, options: FetchEn
         errorToastTitle: "Error Saving Book",
     });
 }
-export const updateBookHelper = async (bookId: string, bookData: Book, options: FetchEntitiesOptions): Promise<Book | null> => {
+export const updateBookHelper = async (bookId: string, bookData: BookSaveRequest, options: FetchEntitiesOptions): Promise<Book | null> => {
     return apiCall<Book>({
         url: `${BOOK_URL}/${bookId}`,
         method: httpMethods.PUT,

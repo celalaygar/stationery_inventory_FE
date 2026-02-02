@@ -10,7 +10,7 @@ import { Plus, Download, Search } from 'lucide-react'
 import { Book } from '@/lib/slices/booksSlice'
 import { Category, CategoryTypes } from '@/lib/slices/categoriesSlice'
 import { getCategoriesByTypeHelper } from '@/lib/service/helper/category-helper'
-import { deleteBookHelper, getBooksByPaginationHelper, saveBookHelper } from '@/lib/service/helper/books-helper'
+import { deleteBookHelper, getBooksByPaginationHelper, saveBookHelper, updateBookHelper } from '@/lib/service/helper/books-helper'
 
 
 export default function BooksPage() {
@@ -88,13 +88,20 @@ export default function BooksPage() {
     setDialogOpen(false)
   }
 
-  const handleUpdateBook = (book: Omit<Book, 'createdAt'>) => {
-    dispatch(
-      updateBook({
-        ...book,
-        createdAt: editingBook?.createdAt || new Date().toISOString(),
-      })
-    )
+  const handleUpdateBook = async (book: BookSaveRequest) => {
+    const newBook: BookSaveRequest = {
+      ...book,
+    }
+    if (!book.id) return;
+    const response: Book | null = await updateBookHelper(book.id, newBook, { setLoading: setLoading });
+    if (response !== null) {
+      console.log(response)
+      setBooks((list) => {
+        if (!list) return [response];
+        return list.map((b) => (b.id === response.id ? response : b));
+      });
+    }
+
     setEditingBook(null)
     setDialogOpen(false)
   }

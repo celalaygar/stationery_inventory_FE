@@ -21,10 +21,13 @@ export async function GET(req: NextRequest,
     });
 }
 
-export async function PUT(req: NextRequest) {
-
+export async function PUT(req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
     const clientIp = req.ip || req.headers.get('x-forwarded-for') || req.headers.get('remote-address');
+
     const body = await req.json();
+    const pId = await (await params).id;
     return RouteBaseService.request(URL + BOOK_URL + "/" + pId, {
         method: httpMethods.PUT,
         clientIp: clientIp, // ✅ IP'yi servise ilet
