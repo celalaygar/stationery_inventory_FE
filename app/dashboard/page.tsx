@@ -6,7 +6,7 @@ import RecentItemsCard from '@/components/recent-items-card'
 import { BookOpen, Package, Layers, TrendingUp } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { getBookTotalCountHelper, getTotalPriceHelper } from '@/lib/service/helper/books-helper'
-import { Category } from '@/lib/slices/categoriesSlice'
+import { Category, CategoryTypes } from '@/lib/slices/categoriesSlice'
 import { getCategoriesHelper } from '@/lib/service/helper/category-helper'
 
 export default function DashboardPage() {
@@ -17,14 +17,18 @@ export default function DashboardPage() {
   const [totalStationery, setTotalStationery] = useState<number>(0)
   const [totalPrice, setTotalPrice] = useState<number>(0)
 
+  const [bookCategories, setBookCategories] = useState<Category[]>([])
+  const [stationeryCategories, setStationeryCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(false)
 
   const getCategories = useCallback(async () => {
     const response: Category[] | null = await getCategoriesHelper({ setLoading: setLoading });
     if (response !== null) {
-      setCategories(response);
+      setBookCategories(response.filter((c) => c.type === CategoryTypes.BOOKS));
+      setStationeryCategories(response.filter((c) => c.type === CategoryTypes.STATIONERY));
     } else {
-      setCategories([]);
+      setBookCategories([]);
+      setStationeryCategories([]);
     }
   }, []);
 
@@ -73,6 +77,13 @@ export default function DashboardPage() {
           changePositive={true}
         />
         <StatCard
+          title="Toplam Değer"
+          value={`₺${totalPrice}`}
+          icon={TrendingUp}
+          change="+5.1%"
+          changePositive={true}
+        />
+        <StatCard
           title="Kırtasiye Ürünleri"
           value={totalStationery}
           icon={Package}
@@ -80,17 +91,24 @@ export default function DashboardPage() {
           changePositive={true}
         />
         <StatCard
-          title="Kategoriler"
-          value={categories.length}
-          icon={Layers}
-          change="3 aktif"
+          title="Toplam Değer"
+          value={`₺${0}`}
+          icon={TrendingUp}
+          change="+5.1%"
           changePositive={true}
         />
         <StatCard
-          title="Toplam Değer"
-          value={`₺${totalPrice}`}
-          icon={TrendingUp}
-          change="+5.1%"
+          title="Kitap Kategorileri"
+          value={bookCategories.length}
+          icon={Layers}
+          change={`${bookCategories.filter(c => c.active).length} aktif`}
+          changePositive={true}
+        />
+        <StatCard
+          title="Kırtasiye Kategorileri"
+          value={stationeryCategories.length}
+          icon={Layers}
+          change={`${stationeryCategories.filter(c => c.active).length} aktif`}
           changePositive={true}
         />
       </div>

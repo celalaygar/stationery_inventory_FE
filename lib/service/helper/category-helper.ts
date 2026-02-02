@@ -66,11 +66,11 @@ export const getCategoriesCountByTypeHelper = async (type: string, options: Fetc
     });
 }
 
-export const updateCategoryStatusHelper = async (categoryId: string, isActive: boolean, options: FetchEntitiesOptions): Promise<Category | null> => {
+export const updateCategoryStatusHelper = async (categoryId: string, active: boolean, options: FetchEntitiesOptions): Promise<Category | null> => {
     return apiCall<Category | null>({
         url: `${CATEGORY_URL}/${categoryId}/status`,
         method: httpMethods.PATCH,
-        body: { active: isActive },
+        body: { active: active },
         setLoading: options.setLoading,
         successMessage: `Category status has been updated.`,
         errorMessagePrefix: "Failed to update category status",
