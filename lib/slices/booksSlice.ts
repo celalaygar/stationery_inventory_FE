@@ -22,7 +22,7 @@ export interface Book {
   title: string
   name: string
   barcode: string
-  genre: string
+  publishingHouse: string
   price: number
   shelfNo: string
   stockCount: number

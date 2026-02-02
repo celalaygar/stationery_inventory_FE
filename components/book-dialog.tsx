@@ -61,7 +61,7 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
         price: 0,
         shelfNo: '',
         stockCount: 0,
-        categoryId: '',
+        categoryId: bookCategories?.length > 0 && bookCategories[0].id,
         createdAt: undefined,
       })
       setErrors({})
@@ -172,11 +172,12 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
             <Label htmlFor="category" className="text-sm">
               Kategori *
             </Label>
-            <Select value={formData.categoryId} onValueChange={(value) => {
-              setFormData({ ...formData, categoryId: value })
-              if (errors.categoryId) setErrors({ ...errors, categoryId: '' })
-            }}>
-              <SelectTrigger id="categoryId" className={errors.category ? 'border-destructive' : ''}>
+            <Select
+              value={formData.categoryId} onValueChange={(value) => {
+                setFormData({ ...formData, categoryId: value })
+                if (errors.categoryId) setErrors({ ...errors, categoryId: '' })
+              }}>
+              <SelectTrigger id="categoryId" className={`w-full ${errors.categoryId ? 'border-destructive' : ' '}`}>
                 <SelectValue placeholder="Kategori seçin" />
               </SelectTrigger>
               <SelectContent>

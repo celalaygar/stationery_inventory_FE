@@ -20,7 +20,7 @@ export default function BooksTable({ books, onEdit, onDelete }: BooksTableProps)
             <tr className="border-b border-border bg-muted/50">
               <th className="px-6 py-3 text-left font-semibold text-foreground">Kitap Adı</th>
               <th className="px-6 py-3 text-left font-semibold text-foreground">Barkod</th>
-              <th className="px-6 py-3 text-left font-semibold text-foreground">Türü</th>
+              <th className="px-6 py-3 text-left font-semibold text-foreground">Yayın Evi</th>
               <th className="px-6 py-3 text-left font-semibold text-foreground">Kategori</th>
               <th className="px-6 py-3 text-left font-semibold text-foreground">Raf No</th>
               <th className="px-6 py-3 text-right font-semibold text-foreground">Adet</th>
@@ -40,7 +40,7 @@ export default function BooksTable({ books, onEdit, onDelete }: BooksTableProps)
                 <tr key={book.id} className="border-b border-border hover:bg-muted/50 transition-colors">
                   <td className="px-6 py-4 font-medium text-foreground">{book.name}</td>
                   <td className="px-6 py-4 text-sm text-foreground font-mono">{book.barcode}</td>
-                  <td className="px-6 py-4 text-foreground">{book.genre}</td>
+                  <td className="px-6 py-4 text-foreground">{book.publishingHouse}</td>
                   <td className="px-6 py-4">
                     <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category.name}</span>
                   </td>
