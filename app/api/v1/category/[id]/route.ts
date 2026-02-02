@@ -8,16 +8,14 @@ const URL = process.env.BASE_V2_URL
 const CATEGORY = "category"
 
 
-export async function PUT(req: NextRequest,
+export async function GET(req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     const clientIp = req.ip || req.headers.get('x-forwarded-for') || req.headers.get('remote-address');
 
-    const body = await req.json();
     const pId = await (await params).id;
     return RouteBaseService.request(URL + CATEGORY + "/" + pId, {
-        method: httpMethods.PUT,
-        body: body,
+        method: httpMethods.GET,
         clientIp: clientIp, // ✅ IP'yi servise ilet
         // withAuth default: true
     });

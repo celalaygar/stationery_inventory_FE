@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Category } from './categoriesSlice'
 
 export interface Book {
   id: string
@@ -9,8 +10,18 @@ export interface Book {
   price: number
   shelfNo: string
   stockCount: number
-  category: string
-  createdAt: string
+  category: Category
+  createdAt: string | null
+}
+export interface BookSaveRequest {
+  id: string | null | undefined
+  name: string
+  barcode: string
+  price: number
+  shelfNo: string
+  stockCount: number
+  categoryId: string
+  createdAt: string | null | undefined
 }
 
 interface BooksState {

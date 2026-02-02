@@ -29,20 +29,20 @@ export default function BooksTable({ books, onEdit, onDelete }: BooksTableProps)
             </tr>
           </thead>
           <tbody>
-            {books.length === 0 ? (
+            {books?.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-6 py-8 text-center text-muted-foreground">
                   Henüz kitap eklenmemiş
                 </td>
               </tr>
             ) : (
-              books.map((book) => (
+              books?.map((book) => (
                 <tr key={book.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-foreground">{book.title}</td>
+                  <td className="px-6 py-4 font-medium text-foreground">{book.name}</td>
                   <td className="px-6 py-4 text-sm text-foreground font-mono">{book.barcode}</td>
                   <td className="px-6 py-4 text-foreground">{book.genre}</td>
                   <td className="px-6 py-4">
-                    <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category}</span>
+                    <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category.name}</span>
                   </td>
                   <td className="px-6 py-4 text-center font-medium text-foreground">{book.shelfNo}</td>
                   <td className="px-6 py-4 text-right font-medium text-foreground">{book.stockCount}</td>

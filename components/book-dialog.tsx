@@ -4,7 +4,7 @@ import React from "react"
 
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '@/lib/hooks'
-import { Book } from '@/lib/slices/booksSlice'
+import { Book, BookSaveRequest } from '@/lib/slices/booksSlice'
 import {
   Dialog,
   DialogContent,
@@ -24,43 +24,45 @@ interface BookDialogProps {
   open: boolean
   book?: Book
   onOpenChange: (open: boolean) => void
-  onSubmit: (book: Omit<Book, 'id' | 'createdAt'>) => void
+  onSubmit: (book: BookSaveRequest) => void
 }
 
 export default function BookDialog({ bookCategories, open, book, onOpenChange, onSubmit }: BookDialogProps) {
-  const categories = useAppSelector((state) => state.categories.items.filter((c) => c.type === 'book'))
-  const [formData, setFormData] = useState({
-    title: '',
+  const [formData, setFormData] = useState<BookSaveRequest>({
+    id: undefined,
+    name: '',
     barcode: '',
-    genre: '',
     price: 0,
     shelfNo: '',
     stockCount: 0,
-    category: '',
+    categoryId: '',
+    createdAt: undefined,
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (book) {
       setFormData({
-        title: book.title,
+        id: book.id,
+        name: book.name,
         barcode: book.barcode,
-        genre: book.genre,
         price: book.price,
         shelfNo: book.shelfNo,
         stockCount: book.stockCount,
-        category: book.category,
+        categoryId: book.category.id,
+        createdAt: book.createdAt,
       })
       setErrors({})
     } else {
       setFormData({
-        title: '',
+        id: undefined,
+        name: '',
         barcode: '',
-        genre: '',
         price: 0,
         shelfNo: '',
         stockCount: 0,
-        category: '',
+        categoryId: '',
+        createdAt: undefined,
       })
       setErrors({})
     }
@@ -69,14 +71,11 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.title.trim()) {
-      newErrors.title = 'Kitap adı boş bırakılamaz'
+    if (!formData.name.trim()) {
+      newErrors.name = 'Kitap adı boş bırakılamaz'
     }
     if (!formData.barcode.trim()) {
       newErrors.barcode = 'Barkod boş bırakılamaz'
-    }
-    if (!formData.genre.trim()) {
-      newErrors.genre = 'Kitap türü boş bırakılamaz'
     }
     if (!formData.shelfNo.trim()) {
       newErrors.shelfNo = 'Raf numarası boş bırakılamaz'
@@ -87,22 +86,23 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
     if (formData.stockCount < 0) {
       newErrors.stockCount = 'Miktar negatif olamaz'
     }
-    if (!formData.category) {
-      newErrors.category = 'Kategori seçilmelidir'
+    if (!formData.categoryId) {
+      newErrors.categoryId = 'Kategori seçilmelidir'
     }
 
+    console.log(newErrors);
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log(validateForm());
     if (validateForm()) {
       onSubmit({
         ...formData,
-        title: formData.title.trim(),
+        name: formData.name.trim(),
         barcode: formData.barcode.trim(),
-        genre: formData.genre.trim(),
         shelfNo: formData.shelfNo.trim(),
       })
       onOpenChange(false)
@@ -126,19 +126,19 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
               Kitap Adı *
             </Label>
             <Input
-              id="title"
+              id="name"
               placeholder="Örneğin: Türk Dili ve Edebiyatı"
-              value={formData.title}
+              value={formData.name}
               onChange={(e) => {
-                setFormData({ ...formData, title: e.target.value })
-                if (errors.title) setErrors({ ...errors, title: '' })
+                setFormData({ ...formData, name: e.target.value })
+                if (errors.name) setErrors({ ...errors, name: '' })
               }}
-              className={errors.title ? 'border-destructive' : ''}
+              className={errors.name ? 'border-destructive' : ''}
             />
-            {errors.title && (
+            {errors.name && (
               <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
                 <AlertCircle className="w-3 h-3" />
-                {errors.title}
+                {errors.name}
               </p>
             )}
           </div>
@@ -166,44 +166,22 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
             )}
           </div>
 
-          {/* Genre */}
-          {/* <div className="space-y-1">
-            <Label htmlFor="genre" className="text-sm">
-              Kitap Türü
-            </Label>
-            <Input
-              id="genre"
-              placeholder="Örneğin: Eğitim, Roman"
-              value={formData.genre}
-              onChange={(e) => {
-                setFormData({ ...formData, genre: e.target.value })
-                if (errors.genre) setErrors({ ...errors, genre: '' })
-              }}
-              className={errors.genre ? 'border-destructive' : ''}
-            />
-            {errors.genre && (
-              <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
-                <AlertCircle className="w-3 h-3" />
-                {errors.genre}
-              </p>
-            )}
-          </div> */}
 
           {/* Category */}
           <div className="space-y-1">
             <Label htmlFor="category" className="text-sm">
               Kategori *
             </Label>
-            <Select value={formData.category} onValueChange={(value) => {
-              setFormData({ ...formData, category: value })
-              if (errors.category) setErrors({ ...errors, category: '' })
+            <Select value={formData.categoryId} onValueChange={(value) => {
+              setFormData({ ...formData, categoryId: value })
+              if (errors.categoryId) setErrors({ ...errors, categoryId: '' })
             }}>
-              <SelectTrigger id="category" className={errors.category ? 'border-destructive' : ''}>
+              <SelectTrigger id="categoryId" className={errors.category ? 'border-destructive' : ''}>
                 <SelectValue placeholder="Kategori seçin" />
               </SelectTrigger>
               <SelectContent>
                 {bookCategories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.name}>
+                  <SelectItem key={cat.id} value={cat.id}>
                     {cat.name}
                   </SelectItem>
                 ))}
