@@ -6,7 +6,22 @@ import {
 } from "../BasePath";
 import { httpMethods } from "../HttpService";
 import { CategoryResponse } from "@/lib/model/category";
-import { Book, BookSaveRequest } from "@/lib/slices/booksSlice";
+import { Book, BookSaveRequest, PagedResponse } from "@/lib/slices/booksSlice";
+
+export const getBooksByPaginationHelper = async (bookPageRequest: BookPageRequest, options: FetchEntitiesOptions): Promise<PagedResponse<Book> | null> => {
+    return apiCall<PagedResponse<Book>>({
+        url: BOOK_URL + "/search",
+        method: httpMethods.POST,
+        body: bookPageRequest,
+        setLoading: options.setLoading,
+        successMessage: `Books have been retrieved.`,
+        errorMessagePrefix: "Failed to load books",
+        successToastTitle: "Books Loaded",
+        errorToastTitle: "Error Loading Books",
+    });
+}
+
+
 
 
 export const getBooksHelper = async (options: FetchEntitiesOptions): Promise<Book[] | null> => {

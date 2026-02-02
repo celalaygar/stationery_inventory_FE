@@ -1,6 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Category } from './categoriesSlice'
 
+export interface BookPageRequest {
+  page: number; // Current page
+  size: number;
+  searchText: string;
+}
+
+
+export interface PagedResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number; // Current page
+  size: number;
+}
+
+
 export interface Book {
   id: string
   title: string

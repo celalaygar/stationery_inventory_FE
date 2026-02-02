@@ -2,31 +2,33 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/lib/hooks'
-import { addBook, updateBook, deleteBook, BookSaveRequest } from '@/lib/slices/booksSlice'
+import { updateBook, BookSaveRequest, PagedResponse, BookPageRequest } from '@/lib/slices/booksSlice'
 import BooksTable from '@/components/books-table'
 import BookDialog from '@/components/book-dialog'
 import { Button } from '@/components/ui/button'
 import { Plus, Download, Search } from 'lucide-react'
 import { Book } from '@/lib/slices/booksSlice'
-import BookForm from '@/components/book-form' // Import BookForm component
 import { Category, CategoryTypes } from '@/lib/slices/categoriesSlice'
 import { getCategoriesByTypeHelper } from '@/lib/service/helper/category-helper'
-import { deleteBookHelper, getBooksHelper, saveBookHelper } from '@/lib/service/helper/books-helper'
+import { deleteBookHelper, getBooksByPaginationHelper, saveBookHelper } from '@/lib/service/helper/books-helper'
+
 
 export default function BooksPage() {
   //const books = useAppSelector((state) => state.books.items)
   const dispatch = useAppDispatch()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingBook, setEditingBook] = useState<Book | null>(null)
-  const [showForm, setShowForm] = useState(false) // Declare showForm variable
-
-
 
   const [bookCategories, setBookCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(false)
-  const [book, setBook] = useState<Book | null>(null)
   const [books, setBooks] = useState<Book[] | null>(null)
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [pageSize, setPageSize] = useState(50)
+  const [searchText, setSearchText] = useState("")
+  const [bookPageResponse, setBookPageResponse] = useState<PagedResponse<Book> | null>(null);
 
   const getCategories = useCallback(async () => {
     setBookCategories([]) // Clear previous categories
@@ -39,20 +41,37 @@ export default function BooksPage() {
   }, []);
 
 
-  const getBooks = useCallback(async () => {
-    setBooks(null)
-    const response: Book[] | null = await getBooksHelper({ setLoading: setLoading });
-    if (response !== null) {
-      console.log(response);
-      setBooks(response.slice(-20));
+  const getBooks = useCallback(async (page: number = 0, search: string = "") => {
+    setLoading(true)
+    try {
+      const requestBody: BookPageRequest = {
+        page: page,
+        size: pageSize,
+        searchText: search
+      };
 
-    } else {
+
+      const response: PagedResponse<Book> | null = await getBooksByPaginationHelper(requestBody, { setLoading: setLoading });
+
+      if (response && response.content) {
+        setBooks(response.content);
+        setTotalPages(response.totalPages);
+        setCurrentPage(response.number);
+        setBookPageResponse(response);
+      } else {
+        setBooks([]);
+      }
+    } catch (error) {
+      console.error(error);
       setBooks([]);
+    } finally {
+      setLoading(false)
     }
-  }, []);
+  }, [pageSize]);
+
   useEffect(() => {
     getCategories();
-    getBooks();
+    getBooks(0, "");
   }, [getCategories, getBooks])
 
 
@@ -84,7 +103,7 @@ export default function BooksPage() {
     if (confirm('Bu kitabı silmek istediğinize emin misiniz?')) {
       const response: boolean | null = await deleteBookHelper(id, { setLoading });
       if (response !== null && response === true) {
-        getBooks();
+        getBooks(currentPage, searchText);
       }
     }
   }
@@ -101,18 +120,23 @@ export default function BooksPage() {
     }
   }
 
-  const handleCloseForm = () => {
-    setShowForm(false)
-    setEditingBook(null)
+
+  const handleSearch = () => {
+    getBooks(0, searchText);
   }
 
+  // Sayfa değiştirme
+  const handlePageChange = (newPage: number) => {
+    getBooks(newPage, searchText);
+  }
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Kitap Yönetimi</h1>
-          <p className="text-muted-foreground mt-2">Toplam {books?.length || 0} kitap envanterde</p>
+          <p className="text-muted-foreground mt-2">Toplam
+            <b className="font-bold"> {bookPageResponse?.totalElements || 0}</b> kitap envanterde</p>
         </div>
         <div className="flex gap-2">
           {/* <Button variant="outline" size="sm" className="gap-2 bg-transparent">
@@ -140,11 +164,13 @@ export default function BooksPage() {
         {/* Search Bar */}
         <input
           type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="Kitap adı veya barkod ile ara"
-          className="w-full md:w-1/3 p-2 border border-border rounded-lg mt-1 bg-white text-foreground ml-5"
+          className="flex-1 p-2 border border-border rounded-lg bg-white text-foreground"
         />
-
-        <Button size="lg" className="gap-2 ">
+        <Button size="lg" className="gap-2" onClick={handleSearch}>
           <Search className="w-4 h-4" />
           Sorgula
         </Button>
@@ -156,7 +182,49 @@ export default function BooksPage() {
           <div className="flex justify-center items-center py-20">
             <Download className="w-8 h-8 text-primary animate-spin" />
           </div>
-        ) : <BooksTable books={books} onEdit={handleEdit} onDelete={handleDeleteBook} />
+        ) :
+          <>
+            <BooksTable books={books} onEdit={handleEdit} onDelete={handleDeleteBook} />
+
+            {/* Pagination UI */}
+            <div className="flex items-center justify-between px-2 py-4">
+              <div className="text-sm text-muted-foreground">
+                Toplam <strong>{totalPages}</strong> sayfadan <strong>{currentPage + 1}</strong>. sayfa gösteriliyor
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 0}
+                >
+                  Önceki
+                </Button>
+                <div className="flex items-center gap-1">
+                  {/* Basit sayfa numaraları */}
+                  {[...Array(totalPages)].map((_, i) => (
+                    <Button
+                      key={i}
+                      variant={currentPage === i ? "default" : "outline"}
+                      size="sm"
+                      className="w-8 h-8 p-0"
+                      onClick={() => handlePageChange(i)}
+                    >
+                      {i + 1}
+                    </Button>
+                  )).slice(Math.max(0, currentPage - 2), Math.min(totalPages, currentPage + 3))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage >= totalPages - 1}
+                >
+                  Sonraki
+                </Button>
+              </div>
+            </div>
+          </>
       }
 
     </div>
