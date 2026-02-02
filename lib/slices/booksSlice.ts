@@ -3,11 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface Book {
   id: string
   title: string
+  name: string
   barcode: string
   genre: string
   price: number
-  shelfNumber: string
-  quantity: number
+  shelfNo: string
+  stockCount: number
   category: string
   createdAt: string
 }
@@ -25,8 +26,8 @@ const initialState: BooksState = {
       barcode: '5901234123457',
       genre: 'Eğitim',
       price: 89.99,
-      shelfNumber: 'A-01',
-      quantity: 45,
+      shelfNo: 'A-01',
+      stockCount: 45,
       category: 'Eğitim',
       createdAt: new Date().toISOString(),
     },
@@ -36,8 +37,8 @@ const initialState: BooksState = {
       barcode: '5901234123458',
       genre: 'Bilim',
       price: 75.50,
-      shelfNumber: 'B-02',
-      quantity: 32,
+      shelfNo: 'B-02',
+      stockCount: 32,
       category: 'Eğitim',
       createdAt: new Date().toISOString(),
     },
@@ -51,26 +52,26 @@ const booksSlice = createSlice({
   reducers: {
     addBook: (state, action: PayloadAction<Book>) => {
       state.items.push(action.payload)
-      state.total += action.payload.quantity
+      state.total += action.payload.stockCount
     },
     updateBook: (state, action: PayloadAction<Book>) => {
       const index = state.items.findIndex((book) => book.id === action.payload.id)
       if (index !== -1) {
-        const oldQuantity = state.items[index].quantity
+        const oldstockCount = state.items[index].stockCount
         state.items[index] = action.payload
-        state.total = state.total - oldQuantity + action.payload.quantity
+        state.total = state.total - oldstockCount + action.payload.stockCount
       }
     },
     deleteBook: (state, action: PayloadAction<string>) => {
       const book = state.items.find((b) => b.id === action.payload)
       if (book) {
-        state.total -= book.quantity
+        state.total -= book.stockCount
         state.items = state.items.filter((b) => b.id !== action.payload)
       }
     },
     setBooks: (state, action: PayloadAction<Book[]>) => {
       state.items = action.payload
-      state.total = action.payload.reduce((sum, book) => sum + book.quantity, 0)
+      state.total = action.payload.reduce((sum, book) => sum + book.stockCount, 0)
     },
   },
 })

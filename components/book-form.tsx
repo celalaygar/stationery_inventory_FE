@@ -25,8 +25,8 @@ export default function BookForm({ book, onSubmit, onCancel }: BookFormProps) {
     barcode: book?.barcode || '',
     genre: book?.genre || '',
     price: book?.price || 0,
-    shelfNumber: book?.shelfNumber || '',
-    quantity: book?.quantity || 0,
+    shelfNo: book?.shelfNo || '',
+    stockCount: book?.stockCount || 0,
     category: book?.category || '',
   })
 
@@ -88,24 +88,24 @@ export default function BookForm({ book, onSubmit, onCancel }: BookFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="shelfNumber">Raf No *</Label>
+            <Label htmlFor="shelfNo">Raf No *</Label>
             <Input
-              id="shelfNumber"
+              id="shelfNo"
               placeholder="Örneğin: A-01, B-02"
-              value={formData.shelfNumber}
-              onChange={(e) => setFormData({ ...formData, shelfNumber: e.target.value })}
+              value={formData.shelfNo}
+              onChange={(e) => setFormData({ ...formData, shelfNo: e.target.value })}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quantity">Adet/Stok *</Label>
+            <Label htmlFor="stockCount">Adet/Stok *</Label>
             <Input
-              id="quantity"
+              id="stockCount"
               type="number"
               placeholder="0"
-              value={formData.quantity}
-              onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })}
+              value={formData.stockCount}
+              onChange={(e) => setFormData({ ...formData, stockCount: parseInt(e.target.value) || 0 })}
               required
             />
           </div>

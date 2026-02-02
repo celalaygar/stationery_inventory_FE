@@ -40,7 +40,7 @@ export default function StationeryTable({ items, onEdit, onDelete }: StationeryT
                     <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{item.category}</span>
                   </td>
                   <td className="px-6 py-4 text-right font-medium text-foreground">₺{item.price.toFixed(2)}</td>
-                  <td className="px-6 py-4 text-right font-medium text-foreground">{item.quantity}</td>
+                  <td className="px-6 py-4 text-right font-medium text-foreground">{item.stockCount}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
                       <Button size="sm" variant="ghost" onClick={() => onEdit(item)}>

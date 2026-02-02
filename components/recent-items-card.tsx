@@ -5,7 +5,7 @@ interface Item {
   id: string
   name: string
   category: string
-  quantity: number
+  stockCount: number
   price: number
 }
 
@@ -37,7 +37,7 @@ export default function RecentItemsCard({ title, items, type }: RecentItemsCardP
                 <p className="text-xs text-muted-foreground">{item.category}</p>
               </div>
               <div className="ml-4 text-right">
-                <p className="text-sm font-semibold text-foreground">{item.quantity} adet</p>
+                <p className="text-sm font-semibold text-foreground">{item.stockCount} adet</p>
                 <p className="text-xs text-muted-foreground">₺{item.price.toFixed(2)}</p>
               </div>
             </div>

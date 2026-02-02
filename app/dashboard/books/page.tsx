@@ -119,7 +119,7 @@ export default function BooksPage() {
         {/* Search Bar */}
         <input
           type="text"
-          placeholder="Kitap ara..."
+          placeholder="Kitap adı veya barkod ile ara"
           className="w-full md:w-1/3 p-2 border border-border rounded-lg mt-1 bg-white text-foreground ml-5"
         />
 

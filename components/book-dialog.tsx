@@ -34,8 +34,8 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
     barcode: '',
     genre: '',
     price: 0,
-    shelfNumber: '',
-    quantity: 0,
+    shelfNo: '',
+    stockCount: 0,
     category: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -47,8 +47,8 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
         barcode: book.barcode,
         genre: book.genre,
         price: book.price,
-        shelfNumber: book.shelfNumber,
-        quantity: book.quantity,
+        shelfNo: book.shelfNo,
+        stockCount: book.stockCount,
         category: book.category,
       })
       setErrors({})
@@ -58,8 +58,8 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
         barcode: '',
         genre: '',
         price: 0,
-        shelfNumber: '',
-        quantity: 0,
+        shelfNo: '',
+        stockCount: 0,
         category: '',
       })
       setErrors({})
@@ -78,14 +78,14 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
     if (!formData.genre.trim()) {
       newErrors.genre = 'Kitap türü boş bırakılamaz'
     }
-    if (!formData.shelfNumber.trim()) {
-      newErrors.shelfNumber = 'Raf numarası boş bırakılamaz'
+    if (!formData.shelfNo.trim()) {
+      newErrors.shelfNo = 'Raf numarası boş bırakılamaz'
     }
     if (formData.price <= 0) {
       newErrors.price = 'Fiyat sıfırdan büyük olmalıdır'
     }
-    if (formData.quantity < 0) {
-      newErrors.quantity = 'Miktar negatif olamaz'
+    if (formData.stockCount < 0) {
+      newErrors.stockCount = 'Miktar negatif olamaz'
     }
     if (!formData.category) {
       newErrors.category = 'Kategori seçilmelidir'
@@ -103,7 +103,7 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
         title: formData.title.trim(),
         barcode: formData.barcode.trim(),
         genre: formData.genre.trim(),
-        shelfNumber: formData.shelfNumber.trim(),
+        shelfNo: formData.shelfNo.trim(),
       })
       onOpenChange(false)
     }
@@ -219,28 +219,28 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
 
           {/* Shelf Number */}
           <div className="space-y-1">
-            <Label htmlFor="shelfNumber" className="text-sm">
+            <Label htmlFor="shelfNo" className="text-sm">
               Raf No *
             </Label>
             <Input
-              id="shelfNumber"
+              id="shelfNo"
               placeholder="Örneğin: A-01"
-              value={formData.shelfNumber}
+              value={formData.shelfNo}
               onChange={(e) => {
-                setFormData({ ...formData, shelfNumber: e.target.value })
-                if (errors.shelfNumber) setErrors({ ...errors, shelfNumber: '' })
+                setFormData({ ...formData, shelfNo: e.target.value })
+                if (errors.shelfNo) setErrors({ ...errors, shelfNo: '' })
               }}
-              className={errors.shelfNumber ? 'border-destructive' : ''}
+              className={errors.shelfNo ? 'border-destructive' : ''}
             />
-            {errors.shelfNumber && (
+            {errors.shelfNo && (
               <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
                 <AlertCircle className="w-3 h-3" />
-                {errors.shelfNumber}
+                {errors.shelfNo}
               </p>
             )}
           </div>
 
-          {/* Price and Quantity */}
+          {/* Price and stockCount */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="price" className="text-sm">
@@ -267,24 +267,24 @@ export default function BookDialog({ bookCategories, open, book, onOpenChange, o
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="quantity" className="text-sm">
+              <Label htmlFor="stockCount" className="text-sm">
                 Adet *
               </Label>
               <Input
-                id="quantity"
+                id="stockCount"
                 type="number"
                 placeholder="0"
-                value={formData.quantity}
+                value={formData.stockCount}
                 onChange={(e) => {
-                  setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })
-                  if (errors.quantity) setErrors({ ...errors, quantity: '' })
+                  setFormData({ ...formData, stockCount: parseInt(e.target.value) || 0 })
+                  if (errors.stockCount) setErrors({ ...errors, stockCount: '' })
                 }}
-                className={errors.quantity ? 'border-destructive' : ''}
+                className={errors.stockCount ? 'border-destructive' : ''}
               />
-              {errors.quantity && (
+              {errors.stockCount && (
                 <p className="text-xs text-destructive flex items-center gap-1 mt-0.5">
                   <AlertCircle className="w-3 h-3" />
-                  {errors.quantity}
+                  {errors.stockCount}
                 </p>
               )}
             </div>

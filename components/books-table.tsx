@@ -44,8 +44,8 @@ export default function BooksTable({ books, onEdit, onDelete }: BooksTableProps)
                   <td className="px-6 py-4">
                     <span className="inline-block px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">{book.category}</span>
                   </td>
-                  <td className="px-6 py-4 text-center font-medium text-foreground">{book.shelfNumber}</td>
-                  <td className="px-6 py-4 text-right font-medium text-foreground">{book.quantity}</td>
+                  <td className="px-6 py-4 text-center font-medium text-foreground">{book.shelfNo}</td>
+                  <td className="px-6 py-4 text-right font-medium text-foreground">{book.stockCount}</td>
                   <td className="px-6 py-4 text-right font-medium text-foreground">₺{book.price.toFixed(2)}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">

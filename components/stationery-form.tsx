@@ -25,7 +25,7 @@ export default function StationeryForm({ item, onSubmit, onCancel }: StationeryF
     name: item?.name || '',
     category: item?.category || '',
     price: item?.price || 0,
-    quantity: item?.quantity || 0,
+    stockCount: item?.stockCount || 0,
     sku: item?.sku || '',
     supplier: item?.supplier || '',
     unit: item?.unit || '',
@@ -84,13 +84,13 @@ export default function StationeryForm({ item, onSubmit, onCancel }: StationeryF
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quantity">Adet/Stok *</Label>
+            <Label htmlFor="stockCount">Adet/Stok *</Label>
             <Input
-              id="quantity"
+              id="stockCount"
               type="number"
               placeholder="0"
-              value={formData.quantity}
-              onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })}
+              value={formData.stockCount}
+              onChange={(e) => setFormData({ ...formData, stockCount: parseInt(e.target.value) || 0 })}
               required
             />
           </div>

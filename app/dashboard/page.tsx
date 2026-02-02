@@ -62,7 +62,7 @@ export default function DashboardPage() {
             id: book.id,
             name: book.title,
             category: book.category,
-            quantity: book.quantity,
+            stockCount: book.stockCount,
             price: book.price,
           }))}
           type="book"
@@ -73,7 +73,7 @@ export default function DashboardPage() {
             id: item.id,
             name: item.name,
             category: item.category,
-            quantity: item.quantity,
+            stockCount: item.stockCount,
             price: item.price,
           }))}
           type="stationery"
