@@ -88,3 +88,27 @@ export const deleteBookHelper = async (bookId: string, options: FetchEntitiesOpt
         errorToastTitle: "Error Deleting Book",
     });
 }
+
+export const getBookTotalCountHelper = async (options: FetchEntitiesOptions): Promise<number | null> => {
+    return apiCall<number>({
+        url: `${BOOK_URL}/total-count`,
+        method: httpMethods.GET,
+        setLoading: options.setLoading,
+        successMessage: `Total book count has been retrieved.`,
+        errorMessagePrefix: "Failed to load total book count",
+        successToastTitle: "Total Book Count Loaded",
+        errorToastTitle: "Error Loading Total Book Count",
+    });
+}
+
+export const getTotalPriceHelper = async (options: FetchEntitiesOptions): Promise<number | null> => {
+    return apiCall<number>({
+        url: `${BOOK_URL}/total-price`,
+        method: httpMethods.GET,
+        setLoading: options.setLoading,
+        successMessage: `Total book price has been retrieved.`,
+        errorMessagePrefix: "Failed to load total book price",
+        successToastTitle: "Total Book Price Loaded",
+        errorToastTitle: "Error Loading Total Book Price",
+    });
+}
