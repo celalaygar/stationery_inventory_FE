@@ -77,22 +77,8 @@ export default function DashboardPage() {
           changePositive={true}
         />
         <StatCard
-          title="Toplam Değer"
+          title="Kitaplar Toplam Değer"
           value={`₺${totalPrice}`}
-          icon={TrendingUp}
-          change="+5.1%"
-          changePositive={true}
-        />
-        <StatCard
-          title="Kırtasiye Ürünleri"
-          value={totalStationery}
-          icon={Package}
-          change="+1.2%"
-          changePositive={true}
-        />
-        <StatCard
-          title="Toplam Değer"
-          value={`₺${0}`}
           icon={TrendingUp}
           change="+5.1%"
           changePositive={true}
@@ -109,6 +95,20 @@ export default function DashboardPage() {
           value={stationeryCategories.length}
           icon={Layers}
           change={`${stationeryCategories.filter(c => c.active).length} aktif`}
+          changePositive={true}
+        />
+        <StatCard
+          title="Kırtasiye Ürünleri"
+          value={totalStationery}
+          icon={Package}
+          change="+1.2%"
+          changePositive={true}
+        />
+        <StatCard
+          title="Kırtasiye Toplam Değer"
+          value={`₺${0}`}
+          icon={TrendingUp}
+          change="+5.1%"
           changePositive={true}
         />
       </div>
