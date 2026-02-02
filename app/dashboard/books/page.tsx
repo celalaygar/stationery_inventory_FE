@@ -1,14 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/lib/hooks'
 import { addBook, updateBook, deleteBook } from '@/lib/slices/booksSlice'
 import BooksTable from '@/components/books-table'
 import BookDialog from '@/components/book-dialog'
 import { Button } from '@/components/ui/button'
-import { Plus, Download } from 'lucide-react'
+import { Plus, Download, Search } from 'lucide-react'
 import { Book } from '@/lib/slices/booksSlice'
 import BookForm from '@/components/book-form' // Import BookForm component
+import { Category, CategoryTypes } from '@/lib/slices/categoriesSlice'
+import { getCategoriesByTypeHelper } from '@/lib/service/helper/category-helper'
 
 export default function BooksPage() {
   const books = useAppSelector((state) => state.books.items)
@@ -16,6 +18,28 @@ export default function BooksPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingBook, setEditingBook] = useState<Book | null>(null)
   const [showForm, setShowForm] = useState(false) // Declare showForm variable
+
+
+
+  const [bookCategories, setBookCategories] = useState<Category[]>([])
+  const [loadingCategories, setLoadingCategories] = useState(false)
+
+
+  const getCategories = useCallback(async () => {
+    setBookCategories([]) // Clear previous categories
+    const response: Category[] | null = await getCategoriesByTypeHelper(CategoryTypes.BOOKS, { setLoading: setLoadingCategories });
+    if (response !== null) {
+      setBookCategories(response);
+    } else {
+      setBookCategories([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    getCategories();
+  }, [getCategories])
+
+
 
   const handleAddBook = (book: Omit<Book, 'id' | 'createdAt'>) => {
     const newBook: Book = {
@@ -70,10 +94,10 @@ export default function BooksPage() {
           <p className="text-muted-foreground mt-2">Toplam {books.length} kitap envanterde</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+          {/* <Button variant="outline" size="sm" className="gap-2 bg-transparent">
             <Download className="w-4 h-4" />
             Dışa Aktar
-          </Button>
+          </Button> */}
           <Button size="sm" className="gap-2" onClick={() => setDialogOpen(true)}>
             <Plus className="w-4 h-4" />
             Yeni Kitap Ekle
@@ -83,12 +107,27 @@ export default function BooksPage() {
 
       {/* Dialog */}
       <BookDialog
+        bookCategories={bookCategories}
         open={dialogOpen}
         book={editingBook || undefined}
         onOpenChange={handleDialogOpenChange}
         onSubmit={editingBook ? handleUpdateBook : handleAddBook}
       />
 
+      <div className="flex items-center justify-between">
+
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Kitap ara..."
+          className="w-full md:w-1/3 p-2 border border-border rounded-lg mt-1 bg-white text-foreground ml-5"
+        />
+
+        <Button size="lg" className="gap-2 ">
+          <Search className="w-4 h-4" />
+          Sorgula
+        </Button>
+      </div>
       {/* Table */}
       <BooksTable books={books} onEdit={handleEdit} onDelete={handleDeleteBook} />
     </div>

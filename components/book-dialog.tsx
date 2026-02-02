@@ -17,15 +17,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertCircle } from 'lucide-react'
+import { Category } from "@/lib/slices/categoriesSlice"
 
 interface BookDialogProps {
+  bookCategories: Category[]
   open: boolean
   book?: Book
   onOpenChange: (open: boolean) => void
   onSubmit: (book: Omit<Book, 'id' | 'createdAt'>) => void
 }
 
-export default function BookDialog({ open, book, onOpenChange, onSubmit }: BookDialogProps) {
+export default function BookDialog({ bookCategories, open, book, onOpenChange, onSubmit }: BookDialogProps) {
   const categories = useAppSelector((state) => state.categories.items.filter((c) => c.type === 'book'))
   const [formData, setFormData] = useState({
     title: '',
@@ -165,9 +167,9 @@ export default function BookDialog({ open, book, onOpenChange, onSubmit }: BookD
           </div>
 
           {/* Genre */}
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
             <Label htmlFor="genre" className="text-sm">
-              Kitap Türü *
+              Kitap Türü
             </Label>
             <Input
               id="genre"
@@ -185,7 +187,7 @@ export default function BookDialog({ open, book, onOpenChange, onSubmit }: BookD
                 {errors.genre}
               </p>
             )}
-          </div>
+          </div> */}
 
           {/* Category */}
           <div className="space-y-1">
@@ -200,7 +202,7 @@ export default function BookDialog({ open, book, onOpenChange, onSubmit }: BookD
                 <SelectValue placeholder="Kategori seçin" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
+                {bookCategories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.name}>
                     {cat.name}
                   </SelectItem>

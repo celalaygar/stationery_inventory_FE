@@ -49,7 +49,7 @@ export default function CategoriesPage() {
   const [loadingCategories, setLoadingCategories] = useState(false)
 
 
-  const fetchAllProjectTasks = useCallback(async () => {
+  const getCategories = useCallback(async () => {
     setBookCategories([]) // Clear previous categories
     const response: Category[] | null = await getCategoriesHelper({ setLoading: setLoadingCategories });
     if (response !== null) {
@@ -62,8 +62,8 @@ export default function CategoriesPage() {
   }, []);
 
   useEffect(() => {
-    fetchAllProjectTasks();
-  }, [fetchAllProjectTasks])
+    getCategories();
+  }, [getCategories])
 
   const handleAddCategory = async (category: Category) => {
     const newCategory: Category = {
@@ -191,8 +191,8 @@ export default function CategoriesPage() {
         </TabsList>
         {
           loadingCategories ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground"><Loader2 className="mr-2 h-4 w-4 animate-spin" /></p>
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
             </div>
           ) : (
             <>
