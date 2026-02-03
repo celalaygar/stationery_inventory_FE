@@ -62,6 +62,7 @@ class RouteBaseService {
         } = options;
 
         const fullUrl = this.buildUrl(url, queryParams);
+        console.log("RouteBaseService url: " + fullUrl)
         let headers: HeadersInit;
 
         try {
