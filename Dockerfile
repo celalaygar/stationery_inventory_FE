@@ -12,6 +12,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# EĞER .env dosyan .dockerignore içinde değilse yukarıdaki "COPY . ." ile gelir.
+# Ama garantiye almak için build'den hemen önce şunu ekleyebilirsin:
+COPY .env.production .env
+
 # Next.js telemetry verisini kapatmak istersen:
 ENV NEXT_TELEMETRY_DISABLED=1
 
