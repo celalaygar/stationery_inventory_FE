@@ -6,11 +6,12 @@ import { updateBook, BookSaveRequest, PagedResponse, BookPageRequest } from '@/l
 import BooksTable from '@/components/books-table'
 import BookDialog from '@/components/book-dialog'
 import { Button } from '@/components/ui/button'
-import { Plus, Download, Search } from 'lucide-react'
+import { Plus, Download, Search, ArrowLeft } from 'lucide-react'
 import { Book } from '@/lib/slices/booksSlice'
 import { Category, CategoryTypes } from '@/lib/slices/categoriesSlice'
 import { getCategoriesByTypeHelper } from '@/lib/service/helper/category-helper'
 import { deleteBookHelper, getBooksByPaginationHelper, saveBookHelper, updateBookHelper } from '@/lib/service/helper/books-helper'
+import Pagination from '@/components/Pagination'
 
 
 export default function BooksPage() {
@@ -180,56 +181,29 @@ export default function BooksPage() {
       </div>
       {/* Table */}
 
-      {
-        loading ? (
-          <div className="flex justify-center items-center py-20">
-            <Download className="w-8 h-8 text-primary animate-spin" />
-          </div>
-        ) :
-          <>
-            <BooksTable books={books} onEdit={handleEdit} onDelete={handleDeleteBook} />
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Download className="w-8 h-8 text-primary animate-spin" />
+        </div>
+      ) : (
+        <>
+          {/* Üst Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
 
-            {/* Pagination UI */}
-            <div className="flex items-center justify-between px-2 py-4">
-              <div className="text-sm text-muted-foreground">
-                Toplam <strong>{totalPages}</strong> sayfadan <strong>{currentPage + 1}</strong>. sayfa gösteriliyor
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 0}
-                >
-                  Önceki
-                </Button>
-                <div className="flex items-center gap-1">
-                  {/* Basit sayfa numaraları */}
-                  {[...Array(totalPages)].map((_, i) => (
-                    <Button
-                      key={i}
-                      variant={currentPage === i ? "default" : "outline"}
-                      size="sm"
-                      className="w-8 h-8 p-0"
-                      onClick={() => handlePageChange(i)}
-                    >
-                      {i + 1}
-                    </Button>
-                  )).slice(Math.max(0, currentPage - 2), Math.min(totalPages, currentPage + 3))}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage >= totalPages - 1}
-                >
-                  Sonraki
-                </Button>
-              </div>
-            </div>
-          </>
-      }
+          {books && <BooksTable books={books} onEdit={handleEdit} onDelete={handleDeleteBook} />}
 
+          {/* Alt Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
     </div>
   )
 }

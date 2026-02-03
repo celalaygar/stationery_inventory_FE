@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Edit2, Trash2 } from 'lucide-react'
 
 interface BooksTableProps {
-  books: Book[]
+  books: Book[] | null
   onEdit: (book: Book) => void
   onDelete: (id: string) => void
 }
