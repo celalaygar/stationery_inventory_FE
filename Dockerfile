@@ -1,24 +1,41 @@
-# 1️⃣ Build aşaması
-FROM node:20-alpine AS builder
-
+# 1. Aşama: Bağımlılıkları yükleme
+FROM node:24-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# package.json ve package-lock.json dosyalarını kopyala
 COPY package.json package-lock.json ./
+RUN npm ci
 
-# Bağımlılıkları yükle
-RUN npm install
-
-# Proje dosyalarını kopyala
+# 2. Aşama: Build aşaması
+FROM node:24-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js build işlemini gerçekleştir
+# Next.js telemetry verisini kapatmak istersen:
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN npm run build
 
+# 3. Aşama: Çalıştırma (Runner)
+FROM node:24-alpine AS runner
+WORKDIR /app
 
-# Uygulamanın çalışacağı portu belirle
+ENV NODE_ENV=production
 ENV PORT=5104
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup -S nodejs -g 1001
+RUN adduser -S nextjs -u 1001
+
+# Build aşamasından sadece gerekli olanları alalım
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+USER nextjs
+
 EXPOSE 5104
 
-# Uygulamayı başlat
 CMD ["npm", "run", "start"]

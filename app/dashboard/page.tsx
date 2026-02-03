@@ -73,14 +73,14 @@ export default function DashboardPage() {
           title="Toplam Kitaplar"
           value={totalBooks}
           icon={BookOpen}
-          change="+2.5%"
+          change="+0.0%"
           changePositive={true}
         />
         <StatCard
           title="Kitaplar Toplam Değer"
           value={`₺${totalPrice}`}
           icon={TrendingUp}
-          change="+5.1%"
+          change="+0.0%"
           changePositive={true}
         />
         <StatCard
@@ -101,14 +101,14 @@ export default function DashboardPage() {
           title="Kırtasiye Ürünleri"
           value={totalStationery}
           icon={Package}
-          change="+1.2%"
+          change="+0.0%"
           changePositive={true}
         />
         <StatCard
           title="Kırtasiye Toplam Değer"
           value={`₺${0}`}
           icon={TrendingUp}
-          change="+5.1%"
+          change="+0.0%"
           changePositive={true}
         />
       </div>
