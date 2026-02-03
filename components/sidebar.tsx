@@ -18,11 +18,11 @@ const navigation = [
     href: '/dashboard/books',
     icon: BookOpen,
   },
-  {
+  /*{
     name: 'Kırtasiye Yönetimi',
     href: '/dashboard/stationery',
     icon: Package,
-  },
+  },*/
   {
     name: 'Kategoriler',
     href: '/dashboard/categories',
@@ -53,7 +53,7 @@ function SidebarContent({ isCollapsed = false, onNavigate }: { isCollapsed?: boo
       {/* Navigation */}
       <nav className={cn('flex-1 transition-all duration-300', isCollapsed ? 'p-2' : 'p-4 space-y-2')}>
         {navigation.map((item) => {
-          const isActive = pathname === item.href 
+          const isActive = pathname === item.href
           const Icon = item.icon
 
           return (
